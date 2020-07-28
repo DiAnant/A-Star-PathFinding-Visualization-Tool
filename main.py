@@ -1,11 +1,13 @@
 import pygame as pg
 import random
 
+# Intializing pygame
 pg.init()
 
+
+# window display stuff
 DISPLAY_WIDTH = 800
 DISPLAY_HEIGHT = 600
-
 DP = pg.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pg.display.set_caption("A* - Visualization")
 
@@ -20,6 +22,7 @@ black = (0, 0, 0)
 red = (255, 0, 0)
 
 
+# Main loop
 def main():
     while True:
         for event in pg.event.get():
