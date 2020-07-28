@@ -16,10 +16,10 @@ frame = 60
 clock = pg.time.Clock()
 
 # Colors
-white = (255, 255, 255)
-green = (0, 255, 0)     
-black = (0, 0, 0)
-red = (255, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)     
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
 
 
 # Main loop
@@ -29,7 +29,7 @@ def main():
             if event.type == pg.QUIT:
                 pg.quit()
                 quit()
-        DP.fill(black)
+        DP.fill(WHITE)
         clock.tick(frame)
         pg.display.update()
 
