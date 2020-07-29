@@ -1,37 +1,34 @@
 import pygame as pg
-import random
 
 # Intializing pygame
 pg.init()
 
-
 # window display stuff
-DISPLAY_WIDTH = DISPLAY_HEIGHT = 650
-# DISPLAY_HEIGHT = 700
-DP = pg.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
+DISPLAY_SIDE = 700
+DP = pg.display.set_mode((DISPLAY_SIDE, DISPLAY_SIDE))
 pg.display.set_caption("A* Visualization")
 
 # Frame
-frame = 60
+frame = 100
 clock = pg.time.Clock()
 
 # Colors
 WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)     
-BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+BLACK = (0,0,0)     
+GREY = (168, 159, 158)
 RED = (255, 0, 0)
 BLUE = (50, 119, 168)
 
 # some variables
-
-# Total number of boxes 
 col_no = 35
 yes1 = yes2 = False
 start = End = None
+started = False
 
 class Star:
 	# A matrix/grid for the window
-	matrix = [[0 for _ in range(col_no+1)] for _ in range(col_no+1)]	
+	matrix = [[0 for _ in range(col_no)] for _ in range(col_no)]	
 
 	def __init__(self):
 		# Main pygame loop
@@ -45,7 +42,7 @@ class Star:
 			DP.fill(WHITE)
 			# Running some functions to do stuff
 			self.get_pos()
-			self.square()
+			self.mark_position()
 			self.draw_grid()
 			# Updating the pygame window
 			clock.tick(frame)
@@ -58,32 +55,30 @@ class Star:
 
 	# drawing the whole grid
 	def draw_grid(self):
-		col_dis = DISPLAY_HEIGHT // col_no
-		col_dis_cov = DISPLAY_HEIGHT // col_no
+		col_dis = DISPLAY_SIDE // col_no
+		col_dis_cov = DISPLAY_SIDE // col_no
 		thick = 1
 
 		for i in range(col_no):
 			# Draws Horizontal lines
-			self.draw_rect(BLACK, 0, col_dis_cov, DISPLAY_WIDTH, 0)
+			self.draw_rect(GREY, 0, col_dis_cov, DISPLAY_SIDE, 0)
 
 			# Draws Vertical Lines
-			self.draw_rect(BLACK, col_dis_cov, 0, thick, DISPLAY_HEIGHT)
+			self.draw_rect(GREY, col_dis_cov, 0, thick, DISPLAY_SIDE)
 			col_dis_cov += col_dis
 
 	# getting position of the selected box
 	def get_pos(self):
+		# Something goes wrong when we change the DISPLAY_SIDE and DISPLAY_SIDE to different variables
 		global yes1, yes2, start, end
 		click = pg.mouse.get_pressed()
 		mouse = pg.mouse.get_pos()
-
 		# if there is a click
 		if click[0] == 1:
 			# X axis of the mouse position
-		    x_pos = mouse[0] // (DISPLAY_WIDTH // col_no)
+		    x_pos = mouse[0] // (DISPLAY_SIDE // col_no)
 		    # Y axis of the mouse position
-		    y_pos = mouse[1] // (DISPLAY_HEIGHT // col_no)
-
-		    print(x_pos, y_pos)
+		    y_pos = mouse[1] // (DISPLAY_SIDE // col_no)
 
 		    # Getting the starting point
 		    if yes1 == False:
@@ -109,14 +104,24 @@ class Star:
 		    		if (x_pos, y_pos) != end:
 		    			self.matrix[x_pos][y_pos] = 1
 
+		# If right click, it deletes the obstacle
+		if click[2] == 1:
+			# X axis of the mouse position
+		    x_pos = mouse[0] // (DISPLAY_SIDE // col_no)
+		    # Y axis of the mouse position
+		    y_pos = mouse[1] // (DISPLAY_SIDE // col_no)
+
+		    if self.matrix[x_pos][y_pos] == 1:
+		    	self.matrix[x_pos][y_pos] = 0
+
 		    
 
 	# Draws the square/box wherever it needs to be drawn
-	def square(self):
-		rect_side = DISPLAY_HEIGHT//col_no
-		for i in range(col_no+1):
-			for j in range(col_no+1):
-				# obstables 
+	def mark_position(self):
+		rect_side = DISPLAY_SIDE//col_no
+		for i in range(col_no):
+			for j in range(col_no):
+				# obstacles 
 				if self.matrix[i][j] == 1:
 					self.draw_rect(BLUE, rect_side*i, rect_side*j, rect_side, rect_side)
 				# Green box for the starting point
@@ -125,6 +130,13 @@ class Star:
 				# Red box for the ending point
 				elif self.matrix[i][j] == 3:
 					self.draw_rect(RED, rect_side*i, rect_side*j, rect_side, rect_side)
+
+
+	def algo(self):
+		if event.type == pg.KEYDOWN:
+			if event.key == pg.K_SPACE and not started:
+				started = True
+				# go algo
 
 
 
